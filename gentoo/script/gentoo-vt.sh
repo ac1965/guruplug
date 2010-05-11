@@ -47,9 +47,11 @@ rfs=${distrib}/gentoo
 	[ -d ${distrib}/${rev}/portage ] || install -d ${distrib}/${rev}/portage
 	[ -d ${distrib}/${rev}/binpkgs ] || install -d ${distrib}/${rev}/binpkgs
 	[ -d ${distrib}/${rev}/target_native ] || install -d ${distrib}/${rev}/target_native
+	[ -d ${distrib}/${rev}/rfs ] || install -d ${distrib}/${rev}/rfs
 	[ -L ${portage} ] || ln -s ${distrib}/${rev}/portage ${portage}
 	[ -L ${target_pkgs} ] || ln -s ${distrib}/${rev}/binpkgs ${target_pkgs}
 	[ -L ${native_pkgs} ] || ln -s ${distrib}/${rev}/target_native ${native_pkgs}
+	[ -L ${stage} ] || ln -s ${distrib}/${rev}/rfs ${stage}
 )
 
 [ -d ${rfs} ] || abort "${rfs} not found."
