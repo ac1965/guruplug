@@ -1,0 +1,31 @@
+ARM="x86"
+CHOST="i686-pc-linux-gnu"
+CBUILD="i686-pc-linux-gnu"
+CFLAGS="-O2 -pipe -march=pentium-m --param l1-cache-size=32 --param l1-cache-line-size=64 -mtune=generic" 
+CXXFLAGS="${CFLAGS}"
+ROOT="/"
+ACCEPT_KEYWORDS="x86"
+
+DISTDIR="/var/tmp/distfiles"
+PORTAGE_TMPDIR="/var/tmp/native"
+PKGDIR="${PORTAGE_TMPDIR}/binpkg"
+BUILD_PREFIX="${PORTAGE_TMPDIR}"
+PORTDIR_OVERLAY="/usr/local/overlay/cross-dev"
+
+MAKEOPTS="-j4"
+#FEATURES="distcc parallel-fetch userfetch userpriv buildpkg"
+FEATURES="parallel-fetch userfetch userpriv buildpkg"
+ACCEPT_LICENSE="*"
+GENTOO_MIRRORS="http://gentoo.gg3.net/"
+
+USE="-X -cdr -kde -gnome -qt -gtk -opengl -quicktime -cups \
+	-tcpd -apache -slang \
+	ssl userlocales apache2 sasl \
+	nptl nptlonly threads unicode utf8 \
+	bzip2 crypt loop-aes sqlite xmrpc python bash-completion
+	dvd dvdr cdda cddb \
+	mp3 vorbis wavepack wma mpeg ogg rtsp x264 win32codecs \
+	libv412 v4l2 v4l \
+        wifi bluetooth curl git -dso subversion lzma \
+"
+#@	idn glibc-omitfp -gpm -fortran \

@@ -1,0 +1,12 @@
+#
+
+export proxy="http://192.168.111.3:8080"
+export http_proxy="${proxy}"
+export ftp_proxy="${proxy}"
+export HTTP_PROXY=${proxy}
+export EGIT_FETCH_CMD="env GIT_PROXY_COMMAND=/root/.script/git-proxy.sh git clone"
+export EGIT_DIFFSTAT_CMD="env GIT_PROXY_COMMAND=/root/.script/git-proxy.sh git --no-pager diff --stat"
+export EGIT_UPDATE_CMD="env GIT_PROXY_COMMAND=/root/.script/git-proxy.sh git fetch -f -u"
+
+alias git='GIT_PROXY_COMMAND=~/.script/git-proxy.sh git'
+alias emerge='emerge --jobs=4 --load-average=6 --ask'

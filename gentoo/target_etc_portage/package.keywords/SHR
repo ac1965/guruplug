@@ -1,0 +1,8 @@
+=sys-mobilephone/ophonekitd-20090614 ~arm
+=sys-mobilephone/shr-contacts-20090614 ~arm
+=sys-mobilephone/shr-messages-20090614 ~arm
+=sys-mobilephone/shr-dialer-20090614 ~arm
+=sys-mobilephone/shr-settings-20090630 ~arm
+=sys-mobilephone/libframeworkd-glib-20090227 ~arm
+=sys-mobilephone/libframeworkd-phonegui-20090614 ~arm
+=sys-mobilephone/libframeworkd-phonegui-efl-20090614 ~arm
