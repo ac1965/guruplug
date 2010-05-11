@@ -17,7 +17,7 @@ FEATURES="assume-digests buildpkg distlocks fixpackages news \
     parallel-fetch protect-owned sandbox sfperms strict \
     unmerge-logs unmerge-orphans userfetch \
     noman noinfo nodoc \
-"
+    "
 
 CONFIG_PROTECT="/etc"
 #LINGUAS="ja"

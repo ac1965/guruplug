@@ -79,7 +79,7 @@ rfs=${distrib}/gentoo
 [ -d ${rfs}/usr/${target}/var/tmp/native ] || install -d ${rfs}/usr/${target}/var/tmp/native
 [ -d ${rfs}/var/lib/layman ] || install -d ${rfs}/var/lib/layman
 [ -d ${rfs}/usr/local/overlay ] || install -d ${rfs}/usr/local/overlay
-[ -d ${rfs}/root/stage ] || install -d ${rfs}/root/stage
+[ -d ${rfs}/root/${target}-rfs ] || install -d ${rfs}/root/${target}-rfs
 
 cd ${distrib}
 mount -o bind /dev ${rfs}/dev
@@ -97,10 +97,8 @@ mount -o bind ${target_pkgs} ${rfs}/var/tmp/cross/binpkgs
 mount -o bind ${native_pkgs} ${rfs}/usr/${target}/var/tmp/native
 mount -o bind ${lib_layman} ${rfs}/var/lib/layman
 mount -o bind ${local_overlay} ${rfs}/usr/local/overlay
-mount -o bind ${stage} ${rfs}/root/stage
+mount -o bind ${stage} ${rfs}/root/${target}-rfs
 
-cp ${distrib}/files/chroot.sh ${rfs}/root/chroot.sh
-chmod +x ${rfs}/root/chroot.sh
 [ x"${arg1}" = x"proxy_use" ] && (
 echo proxy using.
 test -d ${rfs}/.subversion
@@ -133,7 +131,6 @@ rm -fr ${rfs}/root/.bash_history
 rm -fr ${rfs}/root/.subversion
 rm -fr ${rfs}/root/.script
 rm -fr ${rfs}/root/.viminfo
-rm -fr ${rfs}/root/chroot.sh
 rm -fr ${rfs}/etc/resolv.conf
 
 umount ${rfs}/root/stage
