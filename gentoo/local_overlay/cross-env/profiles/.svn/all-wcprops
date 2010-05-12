@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 41
+/svn/!svn/ver/1504/portage/trunk/profiles
+END
+use.local.desc
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/!svn/ver/1326/portage/trunk/profiles/use.local.desc
+END
+categories
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/!svn/ver/1504/portage/trunk/profiles/categories
+END
+repo_name
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/!svn/ver/886/portage/trunk/profiles/repo_name
+END
