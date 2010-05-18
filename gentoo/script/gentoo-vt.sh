@@ -130,6 +130,7 @@ source /etc/profile
 export STAGEDIR="/usr/${target}"
 export PS1="(${ps1}:chroot:\W) "
 alias pkg-config='cross-pkg-config'
+alias emerge='emerge --jobs=4 --load-average=3'
 EOF
 #export CROSS_COMPILE="${target}-"
 cp ${distrib}/files/chroot.sh ${rfs}/root
@@ -147,6 +148,7 @@ rm -fr ${rfs}/root/.viminfo
 rm -fr ${rfs}/root/chroot.sh
 rm -fr ${rfs}/etc/resolv.conf
 
+umount ${rfs}/root/${target}-rfs/var/tmp/distfiles
 umount ${rfs}/root/${target}-rfs/var/tmp/native/binpkgs
 umount ${rfs}/root/${target}-rfs/var/tmp/native
 umount ${rfs}/root/${target}-rfs/usr/portage

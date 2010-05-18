@@ -4,17 +4,9 @@ eopts="--usepkg"
 #eopts=""
 
 CHOST=armv5tel-softfloat-linux-gnueabi
+ROOT="/root/${CHOST}-rfs"
 SYSROOT="/usr/${CHOST}"
 PKGCONFIG="${SYSROOT}"/usr/lib/pkgconfig
-
-case "$1" in
---install|-install|-i) # make stage3 (cross-compiled)
-	ROOT="/root/${CHOST}-rfs"
-	;;
-*)
-	ROOT="/usr/${CHOST}"
-	;;
-esac
 
 [ -d ${SYSROOT} ] || install -d ${SYSROOT}
 

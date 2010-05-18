@@ -27,7 +27,7 @@ gcc-config 1
 env-update
 source /etc/profile
 export PS1="($ps1:chroot:\W) "
-alias emerge='emerge --jobs=4'
+alias emerge='emerge --jobs=4 --load-average=3'
 EOF
 chroot ${rfs} /bin/bash --rcfile /root/dot.bashrc
 
