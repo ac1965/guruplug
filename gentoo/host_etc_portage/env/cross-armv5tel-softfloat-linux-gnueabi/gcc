@@ -1,7 +1,0 @@
-# make sure multilib crap doesn't screw us over
-ABI=pos
-LIBDIR_pos="lib"
-CFLAGS_pos=
-CPPFLAGS_pos=
-CXXFLAGS_pos=
-LDFLAGS_pos=

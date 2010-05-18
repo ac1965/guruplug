@@ -1,4 +1,0 @@
-cross-armv5tel-softfloat-linux-gnueabi/binutils -selinux
-cross-armv5tel-softfloat-linux-gnueabi/linux-headers -selinux
-cross-armv5tel-softfloat-linux-gnueabi/glibc -selinux
-cross-armv5tel-softfloat-linux-gnueabi/gcc -selinux -boundschecking -d -gtk -gcj -libffi -mudflap -objc -objc++ -objc-gc -openmp

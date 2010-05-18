@@ -1,2 +1,0 @@
-# Unmask the GSM modem muxer required for the freesmartphone framework.
-=sys-mobilephone/gsm0710muxd-0.9.3.1 ~arm

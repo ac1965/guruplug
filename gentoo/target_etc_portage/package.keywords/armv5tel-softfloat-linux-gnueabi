@@ -1,6 +1,0 @@
-sys-devel/binutils arm ~arm -x86 -~x86
-sys-devel/gcc arm -~arm -x86 -~x86
-sys-kernel/linux-headers arm ~arm -x86 -~x86
-sys-libs/glibc arm ~arm -x86 -~x86
-sys-devel/gdb arm ~arm -x86 -~x86
-dev-util/insight arm ~arm -x86 -~x86
