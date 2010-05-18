@@ -1,0 +1,4 @@
+#=sys-devel/gcc-4.3.2* ~arm
+
+# Mask this out again, because gcc fails to build libstdc++
+#=sys-devel/gcc-4.3.3* ~arm

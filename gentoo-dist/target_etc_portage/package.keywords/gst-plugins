@@ -1,0 +1,4 @@
+=media-libs/gst-plugins-bad-0.10.11 **
+
+=media-plugins/gst-plugins-ivorbis-0.10.9 ~arm
+=media-plugins/gst-plugins-wavpack-0.10.14 **
