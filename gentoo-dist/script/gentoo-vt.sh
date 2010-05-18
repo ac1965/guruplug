@@ -22,7 +22,7 @@ EOF
 	exit
 esac
 
-r=/root/guruplug
+r=/root/cross
 
 distrib=${r}/gentoo-dist
 portage=${r}/portage
@@ -133,12 +133,14 @@ alias pkg-config='cross-pkg-config'
 alias emerge='emerge --jobs=4 --load-average=3'
 EOF
 #export CROSS_COMPILE="${target}-"
+cp -a ${distrib}/script/q ${rfs}/root/cross
 cp ${distrib}/files/chroot.sh ${rfs}/root
 cp -L /etc/resolv.conf ${rfs}/etc/resolv.conf
 
 chroot ${rfs} /bin/bash --rcfile /root/dot.bashrc
 
 # clean-up
+rm -fr ${rfs}/root/cross
 rm -fr ${rfs}/root/dot.bashrc
 rm -fr ${rfs}/root/.proxyuse
 rm -fr ${rfs}/root/.bash_history
