@@ -22,7 +22,7 @@ EOF
 	exit
 esac
 
-r=/root/cross
+r=/root/guruplug
 
 distrib=${r}/gentoo-dist
 portage=${r}/portage
