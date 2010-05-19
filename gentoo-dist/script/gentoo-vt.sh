@@ -122,6 +122,7 @@ mount -o bind ${stage} ${rfs}/root/${target}-rfs
     test -d ${rfs}/.script || install -d ${rfs}/.script
     cp ${distrib}/files/proxyuse ${rfs}/root/.proxyuse
     cp ${distrib}/files/git-proxy.sh ${rfs}/root/.script
+    chmod +x ${rfs}/root/.script/git-proxy.sh
     cp ${distrib}/files/servers ${rfs}/root
 )
 
@@ -144,6 +145,8 @@ EOF
 #export CROSS_COMPILE="${target}-"
 cp -a ${distrib}/script/q ${rfs}/root/cross
 cp ${distrib}/files/chroot.sh ${rfs}/root
+cp ${distrib}/files/mkubi.sh ${rfs}/root/src
+chmod +x ${rfs}/root/src/mkubi.sh
 cp -L /etc/resolv.conf ${rfs}/etc/resolv.conf
 
 chroot ${rfs} /bin/bash --rcfile /root/dot.bashrc
