@@ -18,7 +18,7 @@ case "$1" in
     rfs_nobind|--rfs_nobind|-rfs_nobind|-rn) arg1=rfs_nobind;;
     help|--help|-h|-?)	cat <<EOF
 usage:
-	`basename $0` [ init | proxy_use | help ]
+	`basename $0` [ init | proxy_use | rfs_nobind | help ]
 EOF
 	exit
 esac
