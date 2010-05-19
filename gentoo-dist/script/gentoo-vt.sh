@@ -108,7 +108,7 @@ mount -o bind ${lib_layman} ${rfs}/var/lib/layman
 mount -o bind ${local_overlay} ${rfs}/usr/local/overlay
 mount -o bind ${src} ${rfs}/root/src
 mount -o bind ${stage} ${rfs}/root/${target}-rfs
-[ x"${arg1} = x"rfs_nobind" ] && (
+[ x"${arg1}" = x"rfs_nobind" ] || (
     mount -o bind ${target_portage} ${rfs}/root/${target}-rfs/etc/portage
     mount -o bind ${portage} ${rfs}/root/${target}-rfs/usr/portage
     mount -o bind ${native_tmp} ${rfs}/root/${target}-rfs/var/tmp/native
@@ -159,7 +159,7 @@ rm -fr ${rfs}/root/.viminfo
 rm -fr ${rfs}/root/chroot.sh
 rm -fr ${rfs}/etc/resolv.conf
 
-[ x"${arg1} = x"rfs_nobind" ] && (
+[ x"${arg1}" = x"rfs_nobind" ] || (
     umount ${rfs}/root/${target}-rfs/var/tmp/distfiles
     umount ${rfs}/root/${target}-rfs/var/tmp/native/binpkgs
     umount ${rfs}/root/${target}-rfs/var/tmp/native
