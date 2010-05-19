@@ -5,17 +5,18 @@ base='10.0'
 rev='last'
 
 abort () {
-	echo $1
-	exit
+    echo $1
+    exit
 }
 
 target='armv5tel-softfloat-linux-gnueabi'
 init=${1:init}
 proxy_use=${1:proxy_use}
 case "$1" in
-	init|--init|-init|-i)	arg1=init;;
-	proxy_use|--proxy_use|-proxy_use|-p) arg1=proxy_use;;
-	help|--help|-h|-?)	cat <<EOF
+    init|--init|-init|-i)	arg1=init;;
+    proxy_use|--proxy_use|-proxy_use|-p) arg1=proxy_use;;
+    rfs_nobind|--rfs_nobind|-rfs_nobind|-rn) arg1=rfs_nobind;;
+    help|--help|-h|-?)	cat <<EOF
 usage:
 	`basename $0` [ init | proxy_use | help ]
 EOF
@@ -27,6 +28,7 @@ r=/root/cross
 distrib=${r}/gentoo-dist
 portage=${r}/portage
 distfiles=${r}/distfiles
+src=${r}/src
 lib_layman=${distrib}/lib_layman
 local_overlay=${distrib}/local_overlay
 host_pkgs=${r}/${rev}/host
@@ -43,20 +45,22 @@ rfs=${distrib}/gentoo
 [ -d ${rfs}/usr/${target} ] || abort "You must run crossdev."
 
 [ x"${arg1}" = x"init" ] && (
-	[ -d ${distrib}/${rev} ] || install -d ${distrib}/${rev}
-	[ -d ${r}/${rev} ] || install -d ${r}/${rev}
-	[ -d ${distrib}/${rev}/portage ] || install -d ${distrib}/${rev}/portage
-	[ -d ${distrib}/${rev}/binpkgs ] || install -d ${distrib}/${rev}/binpkgs
-	[ -d ${distrib}/${rev}/native_binpkgs ] || install -d ${distrib}/${rev}/native_binpkgs
-	[ -d ${distrib}/${rev}/rfs ] || install -d ${distrib}/${rev}/rfs
-	[ -L ${target_pkgs} ] || ln -s ${distrib}/${rev}/binpkgs ${target_pkgs}
-	[ -L ${native_pkgs} ] || ln -s ${distrib}/${rev}/native_binpkgs ${native_pkgs}
+    [ -d ${distrib}/${rev} ] || install -d ${distrib}/${rev}
+    [ -d ${r}/${rev} ] || install -d ${r}/${rev}
+    [ -d ${distrib}/${rev}/portage ] || install -d ${distrib}/${rev}/portage
+    [ -d ${distrib}/${rev}/binpkgs ] || install -d ${distrib}/${rev}/binpkgs
+    [ -d ${distrib}/${rev}/native_binpkgs ] || install -d ${distrib}/${rev}/native_binpkgs
+    [ -d ${distrib}/${rev}/rfs ] || install -d ${distrib}/${rev}/rfs
+    [ -L ${target_pkgs} ] || ln -s ${distrib}/${rev}/binpkgs ${target_pkgs}
+    [ -L ${native_pkgs} ] || ln -s ${distrib}/${rev}/native_binpkgs ${native_pkgs}
 )
 
 [ -d ${rfs} ] || abort "${rfs} not found."
 [ -d ${portage} ] || abort "${portage} not found. you must run \``basename $0` init\`"
 
 [ -d ${distfiles} ] || install -d ${distfiles}
+[ -d ${src} ] || install -d ${src}
+[ -d ${src}/git ] || install -d ${src}/git
 [ -d ${host_portage} ] || install -d ${host_portage}
 [ -d ${target_portage} ] || install -d ${target_portage}
 [ -d ${lib_layman} ] || install -d ${lib_layman}
@@ -102,18 +106,23 @@ mount -o bind ${target_tmp} ${rfs}/var/tmp/cross
 mount -o bind ${target_pkgs} ${rfs}/var/tmp/cross/binpkgs
 mount -o bind ${lib_layman} ${rfs}/var/lib/layman
 mount -o bind ${local_overlay} ${rfs}/usr/local/overlay
+mount -o bind ${src} ${rfs}/root/src
 mount -o bind ${stage} ${rfs}/root/${target}-rfs
-mount -o bind ${target_portage} ${rfs}/root/${target}-rfs/etc/portage
-mount -o bind ${portage} ${rfs}/root/${target}-rfs/usr/portage
-mount -o bind ${native_tmp} ${rfs}/root/${target}-rfs/var/tmp/native
-mount -o bind ${native_pkgs} ${rfs}/root/${target}-rfs/var/tmp/native/binpkgs
-mount -o bind ${distfiles} ${rfs}/root/${target}-rfs/var/tmp/distfiles
+[ x"${arg1} = x"rfs_nobind" ] && (
+    mount -o bind ${target_portage} ${rfs}/root/${target}-rfs/etc/portage
+    mount -o bind ${portage} ${rfs}/root/${target}-rfs/usr/portage
+    mount -o bind ${native_tmp} ${rfs}/root/${target}-rfs/var/tmp/native
+    mount -o bind ${native_pkgs} ${rfs}/root/${target}-rfs/var/tmp/native/binpkgs
+    mount -o bind ${distfiles} ${rfs}/root/${target}-rfs/var/tmp/distfiles
+)
 
 [ x"${arg1}" = x"proxy_use" ] && (
-echo proxy using.
-test -d ${rfs}/.subversion
-cp ${distrib}/files/proxyuse ${rfs}/root/.proxyuse
-cp ${distrib}/files/servers ${rfs}/root
+    echo proxy using.
+    test -d ${rfs}/.subversion
+    test -d ${rfs}/.script || install -d ${rfs}/.script
+    cp ${distrib}/files/proxyuse ${rfs}/root/.proxyuse
+    cp ${distrib}/files/git-proxy.sh ${rfs}/root/.script
+    cp ${distrib}/files/servers ${rfs}/root
 )
 
 ps1='`uname -m`'
@@ -121,8 +130,8 @@ cat <<EOF > ${rfs}/root/dot.bashrc
 env-update
 source /etc/profile
 [ -f /root/.proxyuse ] && (
-	svn help >/dev/null 2>&1
-	test -f /root/.subversion || mv /root/servers /root/.subversion
+    svn help >/dev/null 2>&1
+    test -f /root/.subversion || mv /root/servers /root/.subversion
 )
 [ -f /root/.proxyuse ] && source /root/.proxyuse
 [ -L /usr/${target}/etc/make.conf ] || ln -s portage/make.conf-${arch} /usr/${target}/etc/make.conf
@@ -150,12 +159,15 @@ rm -fr ${rfs}/root/.viminfo
 rm -fr ${rfs}/root/chroot.sh
 rm -fr ${rfs}/etc/resolv.conf
 
-umount ${rfs}/root/${target}-rfs/var/tmp/distfiles
-umount ${rfs}/root/${target}-rfs/var/tmp/native/binpkgs
-umount ${rfs}/root/${target}-rfs/var/tmp/native
-umount ${rfs}/root/${target}-rfs/usr/portage
-umount ${rfs}/root/${target}-rfs/etc/portage
+[ x"${arg1} = x"rfs_nobind" ] && (
+    umount ${rfs}/root/${target}-rfs/var/tmp/distfiles
+    umount ${rfs}/root/${target}-rfs/var/tmp/native/binpkgs
+    umount ${rfs}/root/${target}-rfs/var/tmp/native
+    umount ${rfs}/root/${target}-rfs/usr/portage
+    umount ${rfs}/root/${target}-rfs/etc/portage
+)
 umount ${rfs}/root/${target}-rfs
+umount ${rfs}/root/src
 umount ${rfs}/usr/local/overlay
 umount ${rfs}/var/lib/layman
 umount ${rfs}/var/tmp/cross/binpkgs

@@ -1,1 +1,0 @@
-/usr/lib/gcc/i486-linux-gnu/4.3.2/cc1 -E -quiet -v - -D_FORTIFY_SOURCE=2 -march=pentium-m --param l1-cache-size=32 --param l1-cache-line-size=64 -mtune=generic 
