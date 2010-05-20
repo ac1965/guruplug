@@ -86,12 +86,8 @@ rfs=${distrib}/gentoo
 [ -d ${rfs}/var/lib/layman ] || install -d ${rfs}/var/lib/layman
 [ -d ${rfs}/usr/local/overlay ] || install -d ${rfs}/usr/local/overlay
 [ -d ${rfs}/root/${target}-rfs ] || install -d ${rfs}/root/${target}-rfs
-[ -d ${rfs}/root/${target}-rfs/etc/portage ] || install -d ${rfs}/root/${target}-rfs/etc/portage
-[ -d ${rfs}/root/${target}-rfs/usr/portage ] || install -d ${rfs}/root/${target}-rfs/usr/portage
-[ -d ${rfs}/root/${target}-rfs/var/tmp/native ] || install -d ${rfs}/root/${target}-rfs/var/tmp/native
-[ -d ${rfs}/root/${target}-rfs/var/tmp/distfiles ] || install -d ${rfs}/root/${target}-rfs/var/tmp/distfiles
 
-cd ${distrib}
+#cd ${distrib}
 mount -o bind /dev ${rfs}/dev
 mount -o bind /proc ${rfs}/proc
 mount -o bind /sys ${rfs}/sys
@@ -108,18 +104,10 @@ mount -o bind ${lib_layman} ${rfs}/var/lib/layman
 mount -o bind ${local_overlay} ${rfs}/usr/local/overlay
 mount -o bind ${src} ${rfs}/root/src
 mount -o bind ${stage} ${rfs}/root/${target}-rfs
-[ x"${arg1}" = x"rfs_nobind" ] || (
-    mount -o bind ${target_portage} ${rfs}/root/${target}-rfs/etc/portage
-    mount -o bind ${portage} ${rfs}/root/${target}-rfs/usr/portage
-    mount -o bind ${native_tmp} ${rfs}/root/${target}-rfs/var/tmp/native
-    mount -o bind ${native_pkgs} ${rfs}/root/${target}-rfs/var/tmp/native/binpkgs
-    mount -o bind ${distfiles} ${rfs}/root/${target}-rfs/var/tmp/distfiles
-)
 
 [ x"${arg1}" = x"proxy_use" ] && (
     echo proxy using.
-    test -d ${rfs}/.subversion
-    test -d ${rfs}/.script || install -d ${rfs}/.script
+    [ -d ${rfs}/.script ] || install -d ${rfs}/root/.script
     cp ${distrib}/files/proxyuse ${rfs}/root/.proxyuse
     cp ${distrib}/files/git-proxy.sh ${rfs}/root/.script
     chmod +x ${rfs}/root/.script/git-proxy.sh
@@ -149,6 +137,30 @@ cp ${distrib}/files/mkubi.sh ${rfs}/root/src
 chmod +x ${rfs}/root/src/mkubi.sh
 cp -L /etc/resolv.conf ${rfs}/etc/resolv.conf
 
+[ x"${arg1}" = x"rfs_nobind" ] || (
+    if [ -x ${rfs}/root/cross/qemu-wrapper ]; then
+	cp ${rfs}/root/cross/qemu-wrapper ${rfs}/root/${target}-rfs
+    else
+	if [ -f ${rfs}/root/cross/qemu-wrapper.c ]; then
+	    gcc -static -o ${rfs}/root/cross/qemu-wrapper ${rfs}/root/cross/qemu-wrapper.c 2>/dev/null && \
+		cp ${rfs}/root/cross/qemu-wrapper ${rfs}/root/${target}-rfs
+	else
+	    echo "qemu-wrapper: not found."
+	fi
+    fi
+    [ -d ${rfs}/root/${target}-rfs/etc/portage ] || install -d ${rfs}/root/${target}-rfs/etc/portage
+    [ -d ${rfs}/root/${target}-rfs/usr/portage ] || install -d ${rfs}/root/${target}-rfs/usr/portage
+    [ -d ${rfs}/root/${target}-rfs/var/tmp/native ] || install -d ${rfs}/root/${target}-rfs/var/tmp/native
+    [ -d ${rfs}/root/${target}-rfs/var/tmp/distfiles ] || install -d ${rfs}/root/${target}-rfs/var/tmp/distfiles
+    [ -d ${rfs}/root/${target}-rfs/usr/src ] || install -d ${rfs}/root/${target}-rfs/usr/src
+    mount -o bind ${target_portage} ${rfs}/root/${target}-rfs/etc/portage
+    mount -o bind ${portage} ${rfs}/root/${target}-rfs/usr/portage
+    mount -o bind ${native_tmp} ${rfs}/root/${target}-rfs/var/tmp/native
+    mount -o bind ${native_pkgs} ${rfs}/root/${target}-rfs/var/tmp/native/binpkgs
+    mount -o bind ${distfiles} ${rfs}/root/${target}-rfs/var/tmp/distfiles
+    mount -o bind ${src} ${rfs}/root/${target}-rfs/usr/src
+)
+
 chroot ${rfs} /bin/bash --rcfile /root/dot.bashrc
 
 # clean-up
@@ -157,12 +169,16 @@ rm -fr ${rfs}/root/dot.bashrc
 rm -fr ${rfs}/root/.proxyuse
 rm -fr ${rfs}/root/.bash_history
 rm -fr ${rfs}/root/.subversion
-rm -fr ${rfs}/root/.script
 rm -fr ${rfs}/root/.viminfo
+rm -fr ${rfs}/root/.lesshst
+rm -fr ${rfs}/root/.ssh
+rm -fr ${rfs}/root/.script
 rm -fr ${rfs}/root/chroot.sh
 rm -fr ${rfs}/etc/resolv.conf
+rm -fr ${rfs}/root/${target}-rfs/qemu-wrapper
 
 [ x"${arg1}" = x"rfs_nobind" ] || (
+    umount ${rfs}/root/${target}-rfs/usr/src
     umount ${rfs}/root/${target}-rfs/var/tmp/distfiles
     umount ${rfs}/root/${target}-rfs/var/tmp/native/binpkgs
     umount ${rfs}/root/${target}-rfs/var/tmp/native
