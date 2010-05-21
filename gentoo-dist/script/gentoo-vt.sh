@@ -10,8 +10,7 @@ abort () {
 }
 
 target='armv5tel-softfloat-linux-gnueabi'
-init=${1:init}
-proxy_use=${1:proxy_use}
+
 case "$1" in
     init|--init|-init|-i)	arg1=init;;
     proxy_use|--proxy_use|-proxy_use|-p) arg1=proxy_use;;
@@ -87,7 +86,6 @@ rfs=${distrib}/gentoo
 [ -d ${rfs}/usr/local/overlay ] || install -d ${rfs}/usr/local/overlay
 [ -d ${rfs}/root/${target}-rfs ] || install -d ${rfs}/root/${target}-rfs
 
-#cd ${distrib}
 mount -o bind /dev ${rfs}/dev
 mount -o bind /proc ${rfs}/proc
 mount -o bind /sys ${rfs}/sys
